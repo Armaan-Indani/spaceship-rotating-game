@@ -12,6 +12,8 @@ gameOverSound.src = "src/explosion.wav";
 let lastTime = 0;
 let deltaTime = 0;
 
+let bulletDeployTime = 0;
+
 //Canvas Setup
 const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
@@ -260,17 +262,21 @@ let shooter = new Shooter();
 let bulletArray = [];
 
 let bulletDuration = level > 20 ? 5 : 35 - level * 2;
-// let bulletDuration = 10;
+// let bulletDuration = 3;
 
 function manageBullets() {
-  if (frameCount % bulletDuration == 0) {
+  // if (frameCount % bulletDuration == 0) {
+  //   bulletArray.push(new Bullet(player.angle));
+  // }
+  if (bulletDeployTime >= bulletDuration) {
     bulletArray.push(new Bullet(player.angle));
+    bulletDeployTime -= bulletDuration;
   }
-  if (level > 7) {
-    if (frameCount % (bulletDuration * 2) == 0) {
-      bulletArray.push(new Bullet(player.angle));
-    }
-  }
+  // if (level > 7) {
+  //   if (frameCount % (bulletDuration * 2) == 0) {
+  //     bulletArray.push(new Bullet(player.angle));
+  //   }
+  // }
   for (let i = 0; i < bulletArray.length; i++) {
     bulletArray[i].draw();
     bulletArray[i].update();
@@ -316,6 +322,7 @@ function drawGameOverScreen() {
 function animate(currentTime) {
   deltaTime = (currentTime - lastTime) / 1000; // Convert delta time to seconds
   lastTime = currentTime;
+  bulletDeployTime += deltaTime * 35;
   if (!isGameOver) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     manageCoins();
