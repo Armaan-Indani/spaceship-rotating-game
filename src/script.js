@@ -190,13 +190,19 @@ const bulletFire = new Image();
 bulletFire.src = "src/Fire.png";
 
 class Bullet {
-  constructor() {
+  constructor(angle) {
     this.x = canvas.width / 2;
     this.y = canvas.height / 2;
     this.radius = 10;
     this.distance;
-    this.angle = Math.random() * Math.PI * 2;
-    this.speed = 8 + Math.random() * level * 3;
+    this.angleRange =
+      player.direction == 1
+        ? [angle - Math.PI / 9, angle + Math.PI / 3.5]
+        : [angle + Math.PI / 9, angle - Math.PI / 3.5];
+    this.angle =
+      this.angleRange[0] +
+      Math.random() * (this.angleRange[1] - this.angleRange[0]) * 2;
+    this.speed = 8 + Math.random() * level;
   }
   draw() {
     ctx.fillStyle = "black";
@@ -245,11 +251,17 @@ let shooter = new Shooter();
 
 let bulletArray = [];
 
-let bulletDuration = 15 - level;
+let bulletDuration = 15 - level * 2 < 1 ? 1 : 15 - level * 2;
+// let bulletDuration = 1;
 
 function manageBullets() {
   if (frameCount % bulletDuration == 0) {
-    bulletArray.push(new Bullet());
+    bulletArray.push(new Bullet(player.angle));
+  }
+  if (level > 7) {
+    if (frameCount % (bulletDuration * 2) == 0) {
+      bulletArray.push(new Bullet(player.angle));
+    }
   }
   for (let i = 0; i < bulletArray.length; i++) {
     bulletArray[i].draw();
