@@ -26,7 +26,7 @@ let animationId;
 let score = 0;
 let level = 0;
 let frameCount = 0;
-let gameOver = false;
+let isGameOver = false;
 ctx.font = "60px Georgia";
 
 const centerX = canvas.width / 2;
@@ -85,7 +85,7 @@ class Player {
 let player = new Player();
 
 function buttonClicked() {
-  if (!gameOver) {
+  if (!isGameOver) {
     bulletsShooting = true;
     if (player.direction == 0) {
       player.direction = 1;
@@ -257,7 +257,7 @@ function manageBullets() {
   }
   for (let i = 0; i < bulletArray.length; i++) {
     if (bulletArray[i].distance < player.radius + bulletArray[i].radius + 20) {
-      gameOver = true;
+      isGameOver = true;
     }
     if (
       bulletArray[i].x > 1000 ||
@@ -272,7 +272,7 @@ function manageBullets() {
 
 function resetGame() {
   frameCount = 0;
-  gameOver = false;
+  isGameOver = false;
   level = 1;
   score = 0;
   bulletsShooting = false;
@@ -294,7 +294,7 @@ function drawGameOverScreen() {
 }
 
 function animate() {
-  if (!gameOver) {
+  if (!isGameOver) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     manageCoins();
     if (bulletsShooting) {
