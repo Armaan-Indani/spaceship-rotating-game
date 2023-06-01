@@ -9,6 +9,9 @@ document.getElementById("canvas1").style.backgroundSize = "cover";
 gameOverSound = document.createElement("audio");
 gameOverSound.src = "src/explosion.wav";
 
+let lastTime = 0;
+let deltaTime = 0;
+
 //Canvas Setup
 const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
@@ -46,7 +49,8 @@ class Player {
     this.radius = 20;
     this.angle = -Math.PI / 2;
     this.direction = 0;
-    this.speedFactor = level * 2 + 2;
+    this.speedFactor = level * 2 + 60;
+    // this.speedFactor = 0;
   }
 
   resetPlayer() {
@@ -65,7 +69,9 @@ class Player {
   draw() {
     this.x = this.centerX + this.centerRadius * Math.cos(this.angle);
     this.y = this.centerY + this.centerRadius * Math.sin(this.angle);
-    this.angle = this.angle + 0.02 * this.direction * this.speedFactor;
+    // this.angle = this.angle + 0.02 * this.direction * this.speedFactor;
+    this.angle =
+      this.angle + 0.02 * this.direction * this.speedFactor * deltaTime;
     //console.log("Updating...");
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.radius / 10, 0, 2 * Math.PI);
@@ -202,7 +208,7 @@ class Bullet {
     this.angle =
       this.angleRange[0] +
       Math.random() * (this.angleRange[1] - this.angleRange[0]) * 2;
-    this.speed = 8 + Math.random() * level;
+    this.speed = 150 + 50 * level;
   }
   draw() {
     ctx.fillStyle = "black";
@@ -221,8 +227,10 @@ class Bullet {
   }
 
   update() {
-    this.x += this.speed * Math.cos(this.angle);
-    this.y += this.speed * Math.sin(this.angle);
+    this.x += this.speed * Math.cos(this.angle) * deltaTime;
+    this.y += this.speed * Math.sin(this.angle) * deltaTime;
+    // this.x += this.speed * Math.cos(this.angle);
+    // this.y += this.speed * Math.sin(this.angle);
     const dx = this.x - player.x;
     const dy = this.y - player.y;
     this.distance = Math.sqrt(dx * dx + dy * dy);
@@ -251,8 +259,8 @@ let shooter = new Shooter();
 
 let bulletArray = [];
 
-let bulletDuration = 15 - level * 2 < 1 ? 1 : 15 - level * 2;
-// let bulletDuration = 1;
+let bulletDuration = level > 20 ? 5 : 35 - level * 2;
+// let bulletDuration = 10;
 
 function manageBullets() {
   if (frameCount % bulletDuration == 0) {
@@ -292,7 +300,7 @@ function resetGame() {
   player.resetPlayer();
   setCoins();
   cancelAnimationFrame(animationId);
-  animate();
+  startAnimating();
 }
 
 function drawGameOverScreen() {
@@ -305,7 +313,9 @@ function drawGameOverScreen() {
   ctx.fillText("Final Score: " + score, 340, 450);
 }
 
-function animate() {
+function animate(currentTime) {
+  deltaTime = (currentTime - lastTime) / 1000; // Convert delta time to seconds
+  lastTime = currentTime;
   if (!isGameOver) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     manageCoins();
@@ -326,4 +336,9 @@ function animate() {
   }
 }
 
-animate();
+function startAnimating() {
+  lastTime = performance.now();
+  animate(lastTime);
+}
+
+startAnimating(); // Start the animation loop
