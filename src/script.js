@@ -4,7 +4,8 @@ playerLeft.src = "src/rocket.png";
 coinCollected = document.createElement("audio");
 coinCollected.src = "src/arcade.wav";
 
-document.getElementById("canvas1").style.background = "url('src/space-bg.jpg')";
+document.getElementById("canvas1").style.background =
+  "url('src/space-black.jpg')";
 document.getElementById("canvas1").style.backgroundSize = "cover";
 gameOverSound = document.createElement("audio");
 gameOverSound.src = "src/explosion.wav";
@@ -51,8 +52,7 @@ class Player {
     this.radius = 20;
     this.angle = -Math.PI / 2;
     this.direction = 0;
-    this.speedFactor = level * 2 + 60;
-    // this.speedFactor = 0;
+    this.speedFactor = level * 30 + 60;
   }
 
   resetPlayer() {
@@ -71,10 +71,8 @@ class Player {
   draw() {
     this.x = this.centerX + this.centerRadius * Math.cos(this.angle);
     this.y = this.centerY + this.centerRadius * Math.sin(this.angle);
-    // this.angle = this.angle + 0.02 * this.direction * this.speedFactor;
     this.angle =
       this.angle + 0.02 * this.direction * this.speedFactor * deltaTime;
-    //console.log("Updating...");
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.radius / 10, 0, 2 * Math.PI);
     ctx.fillStyle = "red";
@@ -105,21 +103,31 @@ function buttonClicked() {
   }
 }
 
-//Button
-const button = document.createElement("button");
-button.type = "button";
-button.innerHTML = "Change Direction";
-button.className = "btn-styled";
-button.addEventListener("click", function () {
-  buttonClicked();
-});
-document.body.appendChild(button);
+// //Button
+// const button = document.createElement("button");
+// button.type = "button";
+// button.innerHTML = "Change Direction";
+// button.className = "btn-styled";
+// button.addEventListener("click", function () {
+//   buttonClicked();
+// });
+// document.body.appendChild(button);
 
-// const button2 = document.createElement("button");
-// button2.type = "button";
-// button2.innerHTML = "Restart";
-// button2.className = "btn-styled";
-// document.body.appendChild(button2);
+//Canvas onclicked
+canvas.addEventListener(
+  "click",
+  function () {
+    buttonClicked();
+  },
+  false
+);
+
+//spacebar clicked
+document.body.onkeyup = function (e) {
+  if (e.key == " " || e.code == "Space" || e.keyCode == 32) {
+    buttonClicked();
+  }
+};
 
 //Coins
 const coinImage = new Image();
@@ -160,7 +168,6 @@ function setCoins() {
     const x = centerX + centerRad * Math.cos((angle * Math.PI) / 180);
     const y = centerY + centerRad * Math.sin((angle * Math.PI) / 180);
     coinArray.push(new Coin(x, y));
-    //console.log(coinArray.length);
     angle += 10;
   }
 }
@@ -169,11 +176,9 @@ function manageCoins() {
   for (let i = 0; i < coinArray.length; i++) {
     coinArray[i].draw();
     coinArray[i].update();
-    //console.log(coinArray[i].distance);
   }
   for (let i = 0; i < coinArray.length; i++) {
     if (coinArray[i].distance < player.radius + coinArray[i].radius + 30) {
-      //console.log("collision");
       if (!coinArray[i].counted) {
         coinCollected.play();
         coinArray[i].counted = true;
@@ -210,7 +215,7 @@ class Bullet {
     this.angle =
       this.angleRange[0] +
       Math.random() * (this.angleRange[1] - this.angleRange[0]) * 2;
-    this.speed = 150 + 50 * level;
+    this.speed = 150 + 75 * level;
   }
   draw() {
     ctx.fillStyle = "black";
@@ -239,8 +244,11 @@ class Bullet {
   }
 }
 
-const shooterImage = new Image();
-shooterImage.src = "src/orange-planet.png";
+const shooterPlayImage = new Image();
+shooterPlayImage.src = "src/play.png";
+
+const shooterReverseImage = new Image();
+shooterReverseImage.src = "src/reverse.png";
 
 class Shooter {
   constructor() {
@@ -253,7 +261,11 @@ class Shooter {
     ctx.arc(this.x, this.y, 100, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
-    ctx.drawImage(shooterImage, this.x - 135, this.y - 134);
+    ctx.drawImage(
+      bulletsShooting ? shooterReverseImage : shooterPlayImage,
+      this.x - 135,
+      this.y - 135
+    );
   }
 }
 
@@ -261,22 +273,15 @@ let shooter = new Shooter();
 
 let bulletArray = [];
 
-let bulletDuration = level > 20 ? 5 : 35 - level * 2;
-// let bulletDuration = 3;
+let bulletDuration = level > 15 ? 5 : 35 - level * 2;
+// let bulletDuration = 5;
 
 function manageBullets() {
-  // if (frameCount % bulletDuration == 0) {
-  //   bulletArray.push(new Bullet(player.angle));
-  // }
   if (bulletDeployTime >= bulletDuration && bulletsShooting) {
     bulletArray.push(new Bullet(player.angle));
     bulletDeployTime = 0;
   }
-  // if (level > 7) {
-  //   if (frameCount % (bulletDuration * 2) == 0) {
-  //     bulletArray.push(new Bullet(player.angle));
-  //   }
-  // }
+
   for (let i = 0; i < bulletArray.length; i++) {
     bulletArray[i].draw();
     bulletArray[i].update();
