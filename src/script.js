@@ -33,7 +33,7 @@ let score = 0;
 let level = 0;
 let frameCount = 0;
 let isGameOver = false;
-ctx.font = "60px Georgia";
+ctx.font = "60px Orbitron";
 
 const centerX = canvas.width / 2;
 const centerY = canvas.height / 2;
@@ -263,8 +263,8 @@ class Shooter {
     ctx.stroke();
     ctx.drawImage(
       bulletsShooting ? shooterReverseImage : shooterPlayImage,
-      this.x - 135,
-      this.y - 135
+      this.x - 100,
+      this.y - 100
     );
   }
 }
@@ -317,10 +317,10 @@ function resetGame() {
 function drawGameOverScreen() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  ctx.font = "100px Georgia";
+  ctx.font = "100px Orbitron";
   ctx.fillStyle = gradient;
   ctx.fillText("Game Over", 250, 300);
-  ctx.font = "50px Georgia";
+  ctx.font = "50px Orbitron";
   ctx.fillText("Final Score: " + score, 340, 450);
 }
 

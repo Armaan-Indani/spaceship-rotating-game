@@ -1,6 +1,6 @@
 * {
-  margin: 0;
-  padding: 0;
+  margin: 0px;
+  padding: 0px;
 }
 body {
   width: 100vw;
@@ -8,6 +8,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: black;
 }
 
 .btn-styled {
@@ -19,7 +20,7 @@ body {
 }
 
 #canvas1 {
-  width: 800px;
-  height: 800px;
+  width: auto;
+  height: 95vh;
   border: 4px solid black;
 }
