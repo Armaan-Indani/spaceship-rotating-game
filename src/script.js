@@ -33,7 +33,7 @@ let score = 0;
 let level = 0;
 let frameCount = 0;
 let isGameOver = false;
-ctx.font = "60px Orbitron";
+let gameJustStarted = true;
 
 const centerX = canvas.width / 2;
 const centerY = canvas.height / 2;
@@ -117,7 +117,12 @@ function buttonClicked() {
 canvas.addEventListener(
   "click",
   function () {
-    buttonClicked();
+    if (gameJustStarted) {
+      gameJustStarted = false;
+      startAnimating();
+    } else {
+      buttonClicked();
+    }
   },
   false
 );
@@ -273,7 +278,7 @@ let shooter = new Shooter();
 
 let bulletArray = [];
 
-let bulletDuration = level > 15 ? 5 : 35 - level * 2;
+let bulletDuration = level > 7 ? 5 : 35 - level * 4;
 // let bulletDuration = 5;
 
 function manageBullets() {
@@ -319,9 +324,27 @@ function drawGameOverScreen() {
 
   ctx.font = "100px Orbitron";
   ctx.fillStyle = gradient;
-  ctx.fillText("Game Over", 250, 300);
+  ctx.fillText("Game Over", 240, 300);
   ctx.font = "50px Orbitron";
-  ctx.fillText("Final Score: " + score, 340, 450);
+  ctx.fillText("Final Score: " + score, 330, 450);
+  ctx.font = "30px Orbitron";
+  ctx.fillText("click to retry", 420, 580);
+}
+
+function drawHowToPlayScreen() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.font = "80px Orbitron";
+  ctx.fillStyle = gradient;
+  ctx.fillText("How To Play", 230, 200);
+
+  ctx.font = "30px Orbitron";
+  ctx.fillText("Press the space bar or click in the center to", 100, 300);
+  ctx.fillText("change direction", 100, 350);
+  ctx.fillText("Avoid the fireballs and collect all the coins", 100, 450);
+  ctx.fillText("to complete the level", 100, 500);
+  ctx.font = "40px Orbitron";
+  ctx.fillText("click here to accept the challenge", 130, 700);
 }
 
 function animate(currentTime) {
@@ -335,6 +358,7 @@ function animate(currentTime) {
       manageBullets();
     }
     ctx.fillStyle = gradient;
+    ctx.font = "60px Orbitron";
     ctx.fillText("Score: " + score, 10, 50);
     ctx.fillText("Level: " + level, 500, 50);
     frameCount++;
@@ -353,4 +377,5 @@ function startAnimating() {
   animate(lastTime);
 }
 
-startAnimating(); // Start the animation loop
+drawHowToPlayScreen();
+// startAnimating(); // Start the animation loop
