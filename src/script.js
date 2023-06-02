@@ -268,9 +268,9 @@ function manageBullets() {
   // if (frameCount % bulletDuration == 0) {
   //   bulletArray.push(new Bullet(player.angle));
   // }
-  if (bulletDeployTime >= bulletDuration) {
+  if (bulletDeployTime >= bulletDuration && bulletsShooting) {
     bulletArray.push(new Bullet(player.angle));
-    bulletDeployTime -= bulletDuration;
+    bulletDeployTime = 0;
   }
   // if (level > 7) {
   //   if (frameCount % (bulletDuration * 2) == 0) {
