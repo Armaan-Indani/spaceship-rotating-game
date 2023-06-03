@@ -345,6 +345,8 @@ function drawHowToPlayScreen() {
   ctx.fillText("to complete the level", 100, 500);
   ctx.font = "40px Orbitron";
   ctx.fillText("click here to accept the challenge", 130, 700);
+  ctx.font = "20px Orbitron";
+  ctx.fillText("Coded by Armaan", 700, 950);
 }
 
 function animate(currentTime) {
