@@ -1,3 +1,30 @@
+//Canvas Setup
+const canvas = document.getElementById("canvas1");
+const ctx = canvas.getContext("2d");
+canvas.width = 1000;
+canvas.height = 1000;
+
+let gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+gradient.addColorStop("0", "yellow");
+gradient.addColorStop("0.25", "orange");
+gradient.addColorStop("0.5", "red");
+gradient.addColorStop("0.75", "orange");
+gradient.addColorStop("1.0", "yellow");
+
+const label1 = document.getElementById("label1");
+const txtbox = document.getElementById("fname");
+const button = document.getElementById("button1");
+
+label1.font = "100px Orbitron";
+button.addEventListener("click", function () {
+  // console.log(document.getElementById("fname").value);
+  document.cookie = "Name=" + document.getElementById("fname").value + ";";
+  canvas.removeAttribute("hidden");
+  button.hidden = "hidden";
+  txtbox.hidden = "hidden";
+  label1.hidden = "hidden";
+});
+
 const playerLeft = new Image();
 playerLeft.src = "src/rocket.png";
 
@@ -14,19 +41,7 @@ let lastTime = 0;
 let deltaTime = 0;
 
 let bulletDeployTime = 0;
-
-//Canvas Setup
-const canvas = document.getElementById("canvas1");
-const ctx = canvas.getContext("2d");
-canvas.width = 1000;
-canvas.height = 1000;
-
-let gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-gradient.addColorStop("0", "yellow");
-gradient.addColorStop("0.25", "orange");
-gradient.addColorStop("0.5", "red");
-gradient.addColorStop("0.75", "orange");
-gradient.addColorStop("1.0", "yellow");
+let highScore = 0;
 
 let animationId;
 let score = 0;
@@ -320,15 +335,25 @@ function resetGame() {
 }
 
 function drawGameOverScreen() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  highScore = score > highScore ? score : highScore;
+  if (document.cookie.length != 0) {
+    console.log("HighScore is " + highScore);
+    // highScore = document.cookie("High score");
+  }
+  document.cookie = "High score=" + highScore + ";";
 
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.font = "100px Orbitron";
   ctx.fillStyle = gradient;
   ctx.fillText("Game Over", 240, 300);
   ctx.font = "50px Orbitron";
   ctx.fillText("Final Score: " + score, 330, 450);
   ctx.font = "30px Orbitron";
-  ctx.fillText("click to retry", 420, 580);
+  if (document.cookie.length != 0) {
+    ctx.font = "50px Orbitron";
+    ctx.fillText("High Score: " + highScore, 330, 530);
+  }
+  ctx.fillText("click to retry", 340, 700);
 }
 
 function drawHowToPlayScreen() {
@@ -360,9 +385,10 @@ function animate(currentTime) {
       manageBullets();
     }
     ctx.fillStyle = gradient;
-    ctx.font = "60px Orbitron";
+    ctx.font = "40px Orbitron";
     ctx.fillText("Score: " + score, 10, 50);
-    ctx.fillText("Level: " + level, 500, 50);
+    ctx.fillText("Level: " + level, 330, 50);
+    ctx.fillText("High Score: " + highScore, 600, 50);
     frameCount++;
     player.draw();
     shooter.draw();

@@ -11,11 +11,16 @@
       href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap"
       rel="stylesheet"
     />
+    <script src="src/script.js" defer></script>
+
     <link rel="stylesheet" href="src/style.css" />
   </head>
   <body>
-    <canvas id="canvas1"></canvas>
-
-    <script src="src/script.js"></script>
+    <div class="container">
+      <label id="label1">Enter your name:</label>
+      <input type="text" id="fname" name="fname" />
+      <button id="button1">Submit</button>
+    </div>
+    <canvas id="canvas1" hidden></canvas>
   </body>
 </html>
