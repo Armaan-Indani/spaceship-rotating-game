@@ -293,13 +293,13 @@ let shooter = new Shooter();
 
 let bulletArray = [];
 
-let bulletDuration = (2 * (level > 7 ? 5 : 35 - level * 4)) / 3;
+let bulletDuration = (level > 7 ? 5 : 35 - level * 4) / 2;
 // let bulletDuration = 5;
 
 function manageBullets() {
   if (bulletDeployTime >= bulletDuration && bulletsShooting) {
     bulletArray.push(new Bullet(player.angle));
-    bulletArray.push(new Bullet(player.angle));
+    // bulletArray.push(new Bullet(player.angle));
     bulletDeployTime = 0;
   }
 
